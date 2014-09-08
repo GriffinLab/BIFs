@@ -1,4 +1,4 @@
-function [obifs] = computeBIFs(im, sigma, epsilon,configuration)
+function [obifs] = computeOBIFs(im, sigma, epsilon,configuration)
 % COMPUTEBIFS - Computes basic images features
 % 
 % im            Image used for BIFs computation.
@@ -38,7 +38,7 @@ obifs(bifs==1) = 1;
 mask = bifs==2;
 
 slope_gradient = atan2d(jet(3,:,:),jet(2,:,:));
-slope_gradient = testMex(slope_gradient,directionAngles,size(im,1),size(im,2));
+slope_gradient = oBIFsQuantization(slope_gradient,directionAngles,size(im,1),size(im,2));
 slope_gradient = uint8(slope_gradient);
 
 slope_gradient(slope_gradient==6)=5;
@@ -48,7 +48,7 @@ obifs(mask) = 1+slope_gradient(mask);
 
 
 gradient = atand((2*jet(5,:,:))./(jet(6,:,:)-jet(4,:,:)));
-gradient = testMex(gradient,directionAngles,size(im,1),size(im,2));
+gradient = oBIFsQuantization(gradient,directionAngles,size(im,1),size(im,2));
 gradient = uint8(gradient);
 
 gradient(gradient==5 | gradient==6) = 1;
