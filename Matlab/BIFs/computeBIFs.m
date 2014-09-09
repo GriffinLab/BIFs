@@ -1,4 +1,4 @@
-function [bifs,jet] = computeBIFs(im, sigma, epsilon,configuration,legacyGaussDiff)
+function [bifs,jet] = computeBIFs(im, sigma, epsilon,configuration)
 % COMPUTEBIFS - Computes basic images features
 % 
 % im            Image used for BIFs computation.
@@ -15,7 +15,6 @@ function [bifs,jet] = computeBIFs(im, sigma, epsilon,configuration,legacyGaussDi
 % IEEE Trans Pattern Anal Mach Intell (2010) vol. 32 (6) pp. 1072-83
 %
 % Matlab implementation by  Nicolas Jaccard (nicolas.jaccard@gmail.com)
-%'damn'
 
 %Check if an image parameter has been specified
 if(~exist('im','var')) 
@@ -28,10 +27,6 @@ if(nargin<4)
     configuration = 1;
 end
 
-if(nargin<5)
-    legacyGaussDiff = false;
-end
-    
 
 % Load image and normalize
 if(~strcmp(class(im),'double'))
@@ -49,18 +44,13 @@ orders=[0, 0; 1, 0; 0, 1; 2, 0; 1, 1;0, 2];
 jet = zeros(6,size(im,1),size(im,2));
 
 % Do the actual computation
-if(~legacyGaussDiff)
-    DtGfilters = DtGfiltersBank(sigma);
-    
-    for i=1:size(orders,1)
-        jet(i,:,:)=efficientConvolution(im,DtGfilters{i,1},DtGfilters{i,2})*(sigma^(sum(orders(i,:))));
-    end
-    
-else
-    for i=1:size(orders,1)
-        jet(i,:,:)=gfilterCustom(im,sigma,orders(i,:),'replicate')*(sigma^(sum(orders(i,:))));
-    end
+
+DtGfilters = DtGfiltersBank(sigma);
+
+for i=1:size(orders,1)
+    jet(i,:,:)=efficientConvolution(im,DtGfilters{i,1},DtGfilters{i,2})*(sigma^(sum(orders(i,:))));
 end
+    
 
 if(configuration==1)
 
